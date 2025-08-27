@@ -15,8 +15,8 @@ public class Shield_Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.x < -14 || transform.position.x > 15
-            || transform.position.y < -8 || transform.position.y > 8){
+        if (transform.position.x < -14 || transform.position.x > 14.7
+            || transform.position.y < -7.8 || transform.position.y > 8){
                 spawner.BulletCleanup();
                 Destroy(this.gameObject);  
             } 
@@ -27,7 +27,6 @@ public class Shield_Bullet : MonoBehaviour
     private Vector2 Movement(float timer)
     {
         float x = timer * speed * transform.right.x;
-        // float x = timer * speed * transform.u.x;
         float y = timer * speed * transform.right.y;
         return new Vector2(x+spawnPoint.x, y+spawnPoint.y);
     }
