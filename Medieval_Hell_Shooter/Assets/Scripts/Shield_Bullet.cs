@@ -23,8 +23,8 @@ public class Shield_Bullet : MonoBehaviour
     void Update()
     {
         // Destroy the bullet if it goes out of bounds
-        if (transform.position.x < -14.4 || transform.position.x > 14.6
-            || transform.position.y < -7.5 || transform.position.y > 7.5){
+        if (transform.position.x < -17 || transform.position.x > 17
+            || transform.position.y < -8.5 || transform.position.y > 8.5){
                 // calls the function in the spáwner to decrease the bullet count
                 spawner.BulletCleanup(); 
                 // Destroy the bullet

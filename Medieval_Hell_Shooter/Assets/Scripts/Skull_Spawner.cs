@@ -90,7 +90,7 @@ public class Skull_Spawner : MonoBehaviour
             if (count_changes < 3) {
                 // Depending on the spawner type, it calls the appropiate fire function
                 if (spawnerType == SpawnerType.Snake)
-                    Fire();
+                    FireSnake();
                 else if (spawnerType == SpawnerType.Spin)
                     FireSpin();
                 else 
@@ -101,7 +101,7 @@ public class Skull_Spawner : MonoBehaviour
         timerType += Time.deltaTime; // sum the time since the last frame
     }
 
-    void Fire(){
+    void FireSnake(){
         for (int i = 0; i < 8; i++){
             // Calculate the angle for each bullet depending on the number of arms
             float bulletAngle = i * (360 / 8);
