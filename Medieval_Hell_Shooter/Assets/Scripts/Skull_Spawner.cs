@@ -1,130 +1,168 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// <summary>
+// Class for the skull spawner that shoots shield bullets
+// </summary>
 public class Skull_Spawner : MonoBehaviour
 {
-    public enum SpawnerType {Straight,Spin,Wave}
+    // Enum for the different types of spawners
+    public enum SpawnerType {Straight,Snake,Spin}
 
-    [Header("Bullet Attributes")]
-    public GameObject bullet; // Modificarlos desde el inspector
-    public float speed = 0f; // Modificarlos desde el inspector
+    // Variables
+    [Header("Bullet Attributes")] // Header to group of variables in the inspector
+    public GameObject bullet; // the bullet object from the prefab to be spawned
+    public float speed = 0f; // Speed of the buller
+    public int number_arms = 0; // Number of arms to shoot bullets in all directions
 
-    [Header("Spawner Attributes")]
-    public SpawnerType spawnerType; // se modifica el primer spawner desde el inspector
-    public float spawnRate = 0f; // Modificarlos desde el inspector
+    [Header("Spawner Attributes")] // Header to group of variables in the inspector
+    public SpawnerType spawnerType; // Type of spawner from the 
+    public float spawnRate = 0f; // Delay between each bullet spawn
 
-    private GameObject spawnedBullet;
-    private float spawnTimer = 0f;
-    private int number_bullets = 0;
-    public TextMeshProUGUI bulletCountText;
+    private float spawnTimer = 0f; // Timer to keep track of the spawn rate
+    private int numberBullets = 0; // Counter for the number of bullets
+    public TextMeshProUGUI bulletCountText; // Variable to display the bullet count on the UI 
 
-   
-    private float amplitude = 1.4f;
-    private float frequency = 1f;
+    private float timerType = 0f; // Timer to keep track of the time spent in the current spawner type
+    private float totalTimeType = 10f; // Time to spend in each spawner type
+    private int count_changes = 0; // Counter for the number of type changes
+    private bool startPos = false; // Flag to indicate if the start position has been set
+    private float rotationTimer = 0f; // Flag to change the rotation direction in Snake type
 
-    private float type_timer = 0f;
-    private float time_per_type = 10f; // 10 seconds 
-    private int count_changes = 0;
-    private bool start_pos = false;
-    
-    private Vector3 startPosition;
-    private Quaternion startRotation;
+    private Vector3 startPosition; // vector to store the initial position of the spawner
+    private Quaternion startRotation; // quaternion to store the initial rotation of the spawner
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        startPosition = transform.position; 
-        startRotation = transform.rotation;
-        //Debug.Log("Starting position: " + startPosition); 
-        //Debug.Log("Start rotation: " + startRotation); 
+        startPosition = transform.position; // store the initial position
+        startRotation = transform.rotation; // store the initial rotation
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        spawnTimer += Time.deltaTime;
-        if (type_timer >= time_per_type)
-        {
-            //Debug.Log("Entro al changing type");
-            ChangeSpawnerType();
-            type_timer = 0f; 
-            start_pos = false;
-            count_changes++;
+    void Update(){
+        spawnTimer += Time.deltaTime; // Sum the time since the last frame
+        // Check if it's time to change the spawner type
+        if (timerType >= totalTimeType){
+            ChangeSpawnerType(); // change the spawner type
+            timerType = 0f; // reset the type timer
+            startPos = false; // reset the start position flag
+            count_changes++; // increment the change counter
         }
 
-        //Debug.Log("Time Delta: " + Time.deltaTime);
-        if (spawnerType == SpawnerType.Spin)
-        {
-            if (!start_pos){
+        // Check if the spawner equals Snake
+        if (spawnerType == SpawnerType.Snake){
+            // if the start position has not been set, it sets it
+            if (!startPos){
                 transform.position = startPosition;
                 transform.rotation = startRotation;
-                //Debug.Log("Rotation: " + transform.rotation);
-                start_pos = true;
+                startPos = true;
             }
-            transform.eulerAngles = new Vector3(0f,0f,transform.eulerAngles.z + 1f);
-        } else if (spawnerType == SpawnerType.Wave)
-        {
-            if (!start_pos){
+            // Rotates the spawner to certain speed
+            if (rotationTimer<1){
+                transform.Rotate(0, 0, 70f * Time.deltaTime);
+                rotationTimer += Time.deltaTime;
+            } else {
+                transform.Rotate(0, 0, -70f * Time.deltaTime);
+                rotationTimer += Time.deltaTime;
+                if (rotationTimer>2) rotationTimer=0;
+            }
+
+        } else if (spawnerType == SpawnerType.Spin){
+            if (!startPos){
                 transform.position = startPosition;
                 transform.rotation = startRotation;
-                //Debug.Log("Rotation: " + transform.rotation);
-                start_pos = true;
+                startPos = true;
             }
-            transform.position = new Vector3(
-                startPosition.x,
-                startPosition.y + Mathf.Sin(Time.time * frequency) * amplitude, 
-                startPosition.z
-            );
+            // Move the spawner in a Spin pattern
+            transform.Rotate(0, 0, 70f * Time.deltaTime);
         } else {
-            if (!start_pos)
-            {
+            if (!startPos){
                 transform.position = startPosition;
                 transform.rotation = startRotation;
-                //Debug.Log("Rotation: " + transform.rotation);
-                start_pos = true;
+                startPos = true;
             }
         }
 
+        // Check if it's time to spawn a new bullet
         if (spawnTimer >= spawnRate){
+            // if the number of changes is less than 3, it spawns bullets
             if (count_changes < 3) {
-                Fire();
-                spawnTimer = 0;
+                // Depending on the spawner type, it calls the appropiate fire function
+                if (spawnerType == SpawnerType.Snake)
+                    Fire();
+                else if (spawnerType == SpawnerType.Spin)
+                    FireSpin();
+                else 
+                    FireAllAngles();
+                spawnTimer = 0; // reset the spawn timer
             }
         }
-        type_timer += Time.deltaTime;
-        //Debug.Log("Time in current type: " + type_timer);
+        timerType += Time.deltaTime; // sum the time since the last frame
     }
 
-    private void Fire(){
-        if (bullet){
-            spawnedBullet = Instantiate(bullet, transform.position, Quaternion.identity);
-            spawnedBullet.GetComponent<Shield_Bullet>().speed = speed;
-            spawnedBullet.GetComponent<Shield_Bullet>().spawner = this;
-            spawnedBullet.transform.rotation = transform.rotation;
-
-            number_bullets += 1;
-            //Debug.Log("Number of bullets: " + number_bullets);
-            bulletCountText.text = "Contador de balas: " + number_bullets;
+    void Fire(){
+        for (int i = 0; i < 8; i++){
+            // Calculate the angle for each bullet depending on the number of arms
+            float bulletAngle = i * (360 / 8);
+            // Instantiate the bullet at the spawner position with the calculated rotation 
+            GameObject bulletObject = Instantiate(bullet, transform.position, Quaternion.Euler(0,0, bulletAngle+transform.rotation.eulerAngles.z));
+            // Set the bullet speed and spawner reference
+            bulletObject.GetComponent<Shield_Bullet>().speed = speed;
+            bulletObject.GetComponent<Shield_Bullet>().spawner = this;  
+            // Increment the bullet counter
+            numberBullets++;
+            // Update the bullet count text
+            bulletCountText.text = "Contador de balas: " + numberBullets;
         }
+    }
+
+    // Function to fire bullets in all directions
+    void FireAllAngles(){
+        for (int i = 0; i < number_arms; i++){
+            // Calculate the angle for each bullet depending on the number of arms
+            float bulletAngle = i * (360 / number_arms);
+            // Instantiate the bullet at the spawner position with the calculated rotation
+            GameObject bulletObject = Instantiate(bullet, transform.position, Quaternion.Euler(0,0, bulletAngle));
+            // Set the bullet speed and spawner reference
+            bulletObject.GetComponent<Shield_Bullet>().speed = speed;
+            bulletObject.GetComponent<Shield_Bullet>().spawner = this;  
+            // Increment the bullet counter
+            numberBullets++;
+            // Update the bullet count text
+            bulletCountText.text = "Contador de balas: " + numberBullets;
+        }
+    }
+
+    void FireSpin(){
+        // Instantiate the bullet at the spawner position with no rotation
+        GameObject spawnedBullet = Instantiate(bullet, transform.position, Quaternion.Euler(0,0,0));
+        // Set the bullet speed and spawner reference
+        spawnedBullet.GetComponent<Shield_Bullet>().speed = speed;
+        spawnedBullet.GetComponent<Shield_Bullet>().spawner = this;
+        // Set the bullet rotation to match the spawner rotation
+        spawnedBullet.transform.rotation = transform.rotation;
+
+        // Increment the bullet counter
+        numberBullets += 1; 
+        // Update the bullet count text
+        bulletCountText.text = "Contador de balas: " + numberBullets;
     }
 
     public void BulletCleanup(){
-        number_bullets -= 1;
-        //Debug.Log("Number of bullets: " + number_bullets);
-        bulletCountText.text = "Contador de balas: " + number_bullets;
+        // Decrement the bullet once it is destroyed
+        numberBullets -= 1;
+        // Update the bullet count text
+        bulletCountText.text = "Contador de balas: " + numberBullets;
     }
 
-    private void ChangeSpawnerType()
-    {
+    // Function to change the spawner type
+    void ChangeSpawnerType(){
         if (spawnerType == SpawnerType.Straight)
+            spawnerType = SpawnerType.Snake;
+        else if (spawnerType == SpawnerType.Snake)
             spawnerType = SpawnerType.Spin;
-        else if (spawnerType == SpawnerType.Spin)
-            spawnerType = SpawnerType.Wave;
         else
             spawnerType = SpawnerType.Straight;
-
-        Debug.Log("Nuevo tipo de spawner: " + spawnerType);
     }
 }
