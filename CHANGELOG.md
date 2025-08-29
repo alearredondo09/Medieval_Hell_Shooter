@@ -1,3 +1,8 @@
+## [Report] (29/08/2025)
+
+### UPDATE
+- Latex file for the pdf report
+
 ## [Report] (28/08/2025)
 
 ### ADD
