@@ -202,7 +202,7 @@ El juego está diseñado para ofrecer flexibilidad al jugador, permitiéndole es
       }
       \end{verbatim}
 
-      Al momento de instanciar el objeto, se utiliza el mismo componente con una ligera modificación: en la rotación se asigna el ángulo de la bala sumado al ángulo actual del spawner, convirtiéndolo a un valor entero. Esto permite que las balas se dispersen en todas las direcciones de disparo definidas por el patrón. Si no se aplicara esta suma, todas las balas saldrían con el mismo ángulo inicial, lo que generaría un comportamiento similar al patrón Spin, pero concentrando todas las balas en una única dirección en lugar de distribuirlos correctamente.
+      Al momento de instanciar el objeto, se utiliza el mismo componente con una ligera modificación: en la rotación se asigna el ángulo de la bala sumado al ángulo actual del spawner. Esto permite que las balas se dispersen en todas las direcciones de disparo definidas por el patrón. Si no se aplicara esta suma, todas las balas saldrían con el mismo ángulo inicial, lo que generaría un comportamiento similar al patrón Spin, pero concentrando todas las balas en una única dirección en lugar de distribuirlos correctamente.
 
       \begin{verbatim}
           GameObject bulletObject = Instantiate(
