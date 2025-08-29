@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.8.28)  29 AUG 2025 00:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.8.28)  29 AUG 2025 09:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -432,7 +432,7 @@ otation.eulerAngles.z));[]
 [5]
 
 [6]
-Overfull \hbox (7.1436pt too wide) in paragraph at lines 270--271
+Overfull \hbox (7.1436pt too wide) in paragraph at lines 267--268
 []\OT1/ptm/m/n/10.95 Unity Tech-nolo-gies. (2022). Can-not im-plic-itly con-ver
 t type \string" to \TM-Pro.TextMeshProUGUI."
  []
@@ -448,20 +448,20 @@ Package rerunfilecheck Info: File `Medieval_Hell_Shooter.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 9038 strings out of 468134
- 142675 string characters out of 5430740
- 559019 words of memory out of 5000000
+ 9039 strings out of 468134
+ 142685 string characters out of 5430740
+ 559028 words of memory out of 5000000
  37536 multiletter control sequences out of 15000+600000
  646556 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,789b,627s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,805b,627s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/aleja/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pf
 b><C:/Users/aleja/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pf
 b><C:/Users/aleja/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pf
 b>
-Output written on Medieval_Hell_Shooter.pdf (7 pages, 89694 bytes).
+Output written on Medieval_Hell_Shooter.pdf (7 pages, 90141 bytes).
 PDF statistics:
- 78 PDF objects out of 1000 (max. 8388607)
- 15 named destinations out of 1000 (max. 500000)
+ 79 PDF objects out of 1000 (max. 8388607)
+ 16 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

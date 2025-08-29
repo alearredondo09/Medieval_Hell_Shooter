@@ -48,7 +48,7 @@ El juego está diseñado para ofrecer flexibilidad al jugador, permitiéndole es
 
 \begin{itemize}
 \item La velocidad de la bala
-\item El número de brazos que tendrá el spawner
+\item El número de direcciones de disparo que tendrá el spawner
 \item El tipo de movimiento que seguirá al disparar 
 \item El intervalo de tiempo entre cada lanzamiento.
 \end{itemize}
@@ -194,7 +194,7 @@ El juego está diseñado para ofrecer flexibilidad al jugador, permitiéndole es
       }
       \end{verbatim}
 
-      A su vez, a la hora de instanciar el objeto, se le pasa los mismo componente con un ligero cambio, el cual es que en la rotación se le pasa el angulo de rotación que se le da a la bala sumandole el angulo de rotación que tiene el spawner convirtiendolo a entero
+      Al momento de instanciar el objeto, se utiliza el mismo componente con una ligera modificación: en la rotación se asigna el ángulo de la bala sumado al ángulo actual del spawner, convirtiéndolo a un valor entero. Esto permite que las balas se dispersen en todas las direcciones de disparo definidas por el patrón. Si no se aplicara esta suma, todas las balas saldrían con el mismo ángulo inicial, lo que generaría un comportamiento similar al patrón Spin, pero concentrando todas las balas en una única dirección en lugar de distribuirlos correctamente.
 
       \begin{verbatim}
           GameObject bulletObject = Instantiate(
@@ -209,12 +209,11 @@ El juego está diseñado para ofrecer flexibilidad al jugador, permitiéndole es
     
     \vspace{0.5cm}
     
-    Cada patrón es diferente debido a que sus formas de oscilar son distintas. Si bien existe la posibilidad de ajustar la velocidad, el período de lanzamiento de las balas o el número de brazos que tendrá el spawner, los movimientos que realiza cada patrón son únicos. Por ejemplo, el patrón \textbf{Snake} se caracteriza por un cambio continuo de ángulo que hace que las balas sigan una trayectoria ondulada, mientras que el patrón \textbf{Straight} lanza las balas en línea recta, y el patrón \textbf{Spin} combina un movimiento rotatorio constante del spawner para dispersar las balas de manera circular. Estas diferencias permiten ofrecer al jugador diversos patrones visualmente distintos y mecánicamente únicos.   
+    Cada patrón es diferente debido a que sus formas de oscilar son distintas. Si bien existe la posibilidad de ajustar la velocidad, el período de lanzamiento de las balas o el número de direcciones de disparo que tendrá el spawner, los movimientos que realiza cada patrón son únicos. Por ejemplo, el patrón \textbf{Snake} se caracteriza por un cambio continuo de ángulo que hace que las balas sigan una trayectoria ondulada, mientras que el patrón \textbf{Straight} lanza las balas en línea recta, y el patrón \textbf{Spin} combina un movimiento rotatorio constante del spawner para dispersar las balas de manera circular. Estas diferencias permiten ofrecer al jugador diversos patrones visualmente distintos y mecánicamente únicos.   
+
+  \end{itemize}
     
-    \vspace{0.5cm}
-    
-    \item \textbf{Reflexión}
-    \vspace{0.5cm}
+  \section*{Reflexión}
 
     Durante esta tercera semana, me encontré con retos que al principio pensé que serían un impedimento para realizar esta actividad, pero con el tiempo logré sobrellevarlos y organizarme para completar todo en tiempo y forma, sin necesidad de desvelarme ni experimentar estrés constante. Algunos de los desafíos enfrentados fueron: 
 
@@ -227,8 +226,6 @@ El juego está diseñado para ofrecer flexibilidad al jugador, permitiéndole es
       
       \item Establecer mi spawner fue un reto, porque al asignarlo a mi boss este giraba debido a la rotación necesaria para lanzar los escudos. Por ello, decidí tener un spawner oculto detrás del boss, haciendo que el boss permanezca quieto y que únicamente el spawner realice la rotación.
     \end{itemize}
-
-  \end{itemize}
 
   \section*{Video de demostración y reporte}
   \begin{itemize}
@@ -243,7 +240,7 @@ El juego está diseñado para ofrecer flexibilidad al jugador, permitiéndole es
   Para futuras mejoras, se podrían implementar los siguientes aspectos: 
   \begin{itemize}
     \item Movimiento de un personaje controlado por el jugador.
-    \item Objetos destructibles y detección de colisiones.
+    \item Objetos destructibles por detección de colisiones.
     \item Patrones de disparo más complejos.
   \end{itemize}
 
