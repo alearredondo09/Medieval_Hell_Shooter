@@ -1,0 +1,277 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{titling}
+\usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage{setspace}
+\usepackage{mathptmx} % Times New Roman para texto y matemáticas
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\onehalfspacing 
+\pagestyle{empty}
+
+\title{
+  \fontsize{80}{80}\selectfont \textbf{Medieval Hell Shooter}\\[1em]
+  \large \textbf{Evidencia 2}\\Actividad Integradora Gráficas\\[1.5em]
+  \large Modelación de sistemas multiagentes\\ con gráficas computacionales\\[1.5em]
+}
+\author{\textbf{Alejandra Arredondo}}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}  % evita encabezados/pies de página en la portada
+
+\newpage                % empieza contenido en la página siguiente
+\pagestyle{plain}       % vuelve a mostrar numeración
+
+\section*{Introducción}
+Durante estas tres semanas, hemos explorado el entorno de desarrollo de videojuegos en Unity. A través de diversos laboratorios, aprendimos conceptos fundamentales que resultaron de gran utilidad para el desarrollo de la actividad integradora de medio término. Entre estos temas destacan el manejo de objetos, la importación de librerías y la gestión de la cámara, habilidades que me permitieron avanzar de manera más eficiente en el desarrollo de mi videojuego.
+
+\vspace{0.5cm} 
+
+Para la actividad integradora que se nos planteó, decidí enfocar la temática de mi Bullet Hell Shooter en un ambiente medieval. Para ello, seleccioné un escudo medieval de los assets importados, que sería el objeto principal a lanzar dentro del juego.
+
+\section*{Nivel Escogido}
+
+Nivel: \textbf{FÁCIL}
+
+\section*{Modo de Juego}
+
+Debido a que seleccioné el nivel fácil, la implementación corresponde a una versión más básica del juego, pero conserva los elementos esenciales que caracterizan a un \textbf{Bullet Hell Shooter}, adaptados a la temática elegida. En esta versión, no se contempla aún la interacción directa de un jugador que controle un personaje en pantalla, pero sí se incluyen distintos aspectos que pueden ser ajustados por el usuario a través del \textbf{Inspector de Unity}, lo cual permite experimentar con la dinámica del juego.
+
+\vspace{0.5cm} 
+
+El juego está diseñado para ofrecer flexibilidad al jugador, permitiéndole escoger el objeto que desea utilizar como bala, siempre y cuando este se encuentre configurado como prefab. Además, es posible personalizar distintos parámetros del sistema de disparo como:
+
+\begin{itemize}
+\item La velocidad de la bala
+\item El número de brazos que tendrá el spawner
+\item El tipo de movimiento que seguirá al disparar 
+\item El intervalo de tiempo entre cada lanzamiento.
+\end{itemize}
+
+\section*{Implementación}
+
+  \begin{itemize}
+    \item \textbf{Técnica de las balas}
+    \vspace{0.5cm}
+
+    Para organizar de manera eficiente la lógica del proyecto, creé una carpeta llamada \texttt{Scripts} dentro de la vista de \texttt{Projects}. En esta carpeta desarrollé un archivo basado en \texttt{MonoBehaviour}, el cual concentra toda la lógica relacionada con el comportamiento de las balas (representadas en este caso por los escudos).
+
+    \vspace{0.5cm}
+
+    Este script se encarga de manejar aspectos fundamentales como:
+    \begin{itemize}
+      \item La velocidad de cada bala.
+      \item Su posición inicial al ser lanzada.
+      \item Una referencia al objeto desde el cual fue disparada.
+      \item El tiempo transcurrido desde su creación para calcular su movimiento de manera precisa.
+    \end{itemize}
+
+    En esta clase, los objetos se desplazan de manera recta gracias a la función \texttt{Movement}, la cual calcula la posición a la que debe moverse cada bala utilizando \texttt{transform.right.x} multiplicado por la \texttt{speed} y el \texttt{timer}. Esto permite que las balas tengan un movimiento lineal desde su creación.
+
+    \begin{verbatim}
+      Vector2 Movement(float timer){
+          float x = timer * speed * transform.right.x;
+          float y = timer * speed * transform.right.y;
+          return new Vector2(x+spawnPoint.x, y+spawnPoint.y);
+      }
+    \end{verbatim}
+
+    El vector \texttt{transform.right} apunta siempre hacia la “derecha” local del objeto, según su rotación inicial. Multiplicarlo por \texttt{speed} y \texttt{timer} calcula el desplazamiento acumulado a lo largo de esa dirección.  
+
+    \vspace{0.5cm}
+
+    A diferencia de lo que podría parecer, este desplazamiento no depende del eje X o Y, sino de la orientación del objeto. Por ejemplo:  
+    \begin{itemize}
+        \item Si el objeto tiene rotación 0°, \texttt{transform.right} coincide con el eje X global y el movimiento es horizontal.  
+        \item Si el objeto está rotado 90°, \texttt{transform.right} apunta hacia el eje Y global y el movimiento es vertical.  
+    \end{itemize}
+
+    De esta manera, la bala siempre se mueve en línea recta siguiendo la dirección “derecha” del objeto desde su creación, sin importar su orientación inicial.
+
+    \vspace{0.5cm}
+
+    Cuando las balas alcanzan ciertas coordenadas definidas en el método \texttt{Update}, se realiza una referencia al \texttt{Spawner} para decrementar el contador de balas activas en pantalla y, finalmente, se destruye el objeto creado.
+
+    \begin{verbatim}
+    void Update()
+    {
+        if (transform.position.x < -17 || transform.position.x > 17
+            || transform.position.y < -8.5 || transform.position.y > 8.5){
+                spawner.BulletCleanup(); 
+                Destroy(this.gameObject);  
+            } 
+        timer += Time.deltaTime; 
+        transform.position = Movement(timer); /
+    }
+    \end{verbatim}
+
+    \item \textbf{Técnica de cada patrón}
+    \vspace{0.5cm}
+    
+    Los patrones de disparo implementados en esta actividad son completamente personalizables gracias a las variables configuradas en el sistema. Esto permite ajustar la dinámica de las balas de acuerdo con las preferencias del usuario y experimentar con diferentes combinaciones para obtener resultados variados.
+    
+    \vspace{0.5cm} 
+    
+    Para el diseño de dichos patrones, tomé como referencia diversos materiales audiovisuales, principalmente tutoriales y ejemplos encontrados en YouTube y TikTok, los cuales me sirvieron de guía para recrear y adaptar los estilos de disparo al contexto de mi propio juego.
+
+    \vspace{0.5cm}
+    \begin{itemize}
+      \item \textbf{Patrón Straight:}
+      
+      \vspace{0.5cm}
+      
+      Este patrón se refleja en el movimiento de las balas definido en su clase. Cuando se dispara cualquier bala desde el \texttt{Spawner}, se crean múltiples objetos. Lo que hace único al método \texttt{FireAllAngles} en la clase \texttt{Skull Spawner} es que, a partir del valor de \texttt{number arms} establecido en el Inspector de Unity, se generan varias balas distribuidas en los ángulos correspondientes al instanciar cada objeto.
+
+      \begin{verbatim}
+      void FireAllAngles(){
+          for (int i = 0; i < number_arms; i++){
+              float bulletAngle = i * (360 / number_arms);
+              GameObject bulletObject = Instantiate(bullet, 
+                  transform.position, Quaternion.Euler(0,0, bulletAngle));
+              bulletObject.GetComponent<Shield_Bullet>().speed = speed;
+              bulletObject.GetComponent<Shield_Bullet>().spawner = this;  
+              numberBullets++;
+              bulletCountText.text = "Contador de balas: " + numberBullets;
+          }
+      }
+      \end{verbatim}
+
+      \vspace{0.5cm}
+
+      Cada bala se instancia con una rotación específica determinada por \texttt{bulletAngle}, de manera que queden distribuidas uniformemente alrededor del \texttt{Spawner}. Además, se asignan la velocidad y la referencia al \texttt{Spawner} correspondiente, y se actualiza el contador de balas activas en pantalla.
+
+      \vspace{0.5cm}
+      
+      \item \textbf{Patrón Spin:}
+      
+      \vspace{0.5cm}
+      
+      Este patrón se implementa haciendo que el spawner realice una rotación continua en el eje Z, lo que genera un desplazamiento giratorio. La rotación se realiza a una velocidad de 70 unidades por segundo mediante la siguiente instrucción:
+
+      \begin{verbatim}
+      transform.Rotate(0, 0, 70f * Time.deltaTime);
+      \end{verbatim}
+
+      Además, cuando se instancia una bala, esta hereda la rotación actual del spawner, asegurando que su movimiento inicial siga la orientación giratoria del objeto que la dispara:
+
+      \begin{verbatim}
+        
+      void FireSpin(){
+        GameObject spawnedBullet = Instantiate(bullet,
+          transform.position, Quaternion.Euler(0,0,0));
+        spawnedBullet.GetComponent<Shield_Bullet>().speed = speed;
+        spawnedBullet.GetComponent<Shield_Bullet>().spawner = this;
+        spawnedBullet.transform.rotation = transform.rotation;
+
+        numberBullets += 1; 
+        bulletCountText.text = "Contador de balas: " + numberBullets;
+      }
+      \end{verbatim}
+
+      De esta manera, cada bala mantiene la rotación del spawner en el momento de ser disparada, permitiendo que el patrón Spin se refleje correctamente en el movimiento de todas las balas generadas.
+
+      \vspace{0.5cm}
+      
+      \item \textbf{Patron Snake:}
+      
+      \vspace{0.5cm}
+
+      Este patrón se realizá mediante una variable auxiliar que me ayuda a llevar el tiempo y poder oscilar entre el angulo de rotaciones que hace es spawner
+
+      \begin{verbatim}
+      if (rotationTimer<1){
+        transform.Rotate(0, 0, 70f * Time.deltaTime);
+        rotationTimer += Time.deltaTime;
+      } else {
+        transform.Rotate(0, 0, -70f * Time.deltaTime);
+        rotationTimer += Time.deltaTime;
+        if (rotationTimer>2) rotationTimer=0;
+      }
+      \end{verbatim}
+
+      A su vez, a la hora de instanciar el objeto, se le pasa los mismo componente con un ligero cambio, el cual es que en la rotación se le pasa el angulo de rotación que se le da a la bala sumandole el angulo de rotación que tiene el spawner convirtiendolo a entero
+
+      \begin{verbatim}
+          GameObject bulletObject = Instantiate(
+            bullet, 
+            transform.position, 
+            Quaternion.Euler(0,0,bulletAngle+transform.rotation.eulerAngles.z));
+      \end{verbatim}
+
+    \end{itemize}
+    
+    \item \textbf{Justificación de por qué cada patrón es diferentes}
+    
+    \vspace{0.5cm}
+    
+    Cada patrón es diferente debido a que sus formas de oscilar son distintas. Si bien existe la posibilidad de ajustar la velocidad, el período de lanzamiento de las balas o el número de brazos que tendrá el spawner, los movimientos que realiza cada patrón son únicos. Por ejemplo, el patrón \textbf{Snake} se caracteriza por un cambio continuo de ángulo que hace que las balas sigan una trayectoria ondulada, mientras que el patrón \textbf{Straight} lanza las balas en línea recta, y el patrón \textbf{Spin} combina un movimiento rotatorio constante del spawner para dispersar las balas de manera circular. Estas diferencias permiten ofrecer al jugador diversos patrones visualmente distintos y mecánicamente únicos.   
+    
+    \vspace{0.5cm}
+    
+    \item \textbf{Reflexión}
+    \vspace{0.5cm}
+
+    Durante esta tercera semana, me encontré con retos que al principio pensé que serían un impedimento para realizar esta actividad, pero con el tiempo logré sobrellevarlos y organizarme para completar todo en tiempo y forma, sin necesidad de desvelarme ni experimentar estrés constante. Algunos de los desafíos enfrentados fueron: 
+
+    \begin{itemize}
+      \item Siempre que inicio una actividad, siento un poco de ansiedad porque no sé cómo empezar. Sin embargo, después de buscar tutoriales en YouTube, revisar la documentación de Unity e incluso seleccionar los assets adecuados para la temática que quería implementar, logré superar este obstáculo que en ocasiones me generaba algo de miedo.
+      
+      \item Desarrollar el mapa en Unity, componente por componente, asegurando que las capas fueran correctas y que todo se viera visualmente agradable, fue un desafío. Los bloques los agregué manualmente uno por uno hasta completar el tablero y asegurarme de que todo estuviera en su lugar.
+      
+      \item Entender la lógica detrás de mi idea para implementar el videojuego, luego de investigar e incluso fracasar en algunos intentos, fue algo interesante pero desafiante, ya que nunca había trabajado con un motor como Unity.
+      
+      \item Establecer mi spawner fue un reto, porque al asignarlo a mi boss este giraba debido a la rotación necesaria para lanzar los escudos. Por ello, decidí tener un spawner oculto detrás del boss, haciendo que el boss permanezca quieto y que únicamente el spawner realice la rotación.
+    \end{itemize}
+
+  \end{itemize}
+
+  \section*{Video de demostración y reporte}
+  \begin{itemize}
+    \item \href{https://youtu.be/X57H45DqY2A}{\textbf{Video demostrativo}}
+      En este \href{https://youtu.be/X57H45DqY2A}{video} se puede encontrar una demostración de como funciona el proyecto que implementé
+    \item \href{https://github.com/alearredondo09/Medieval_Hell_Shooter?tab=readme-ov-file#assets}{\textbf{Link del repositorio}}
+      En esta \href{https://github.com/alearredondo09/Medieval_Hell_Shooter?tab=readme-ov-file#assets}{URL} se puede encontrar el repositorio al cual se realizaron todos los commits con las modificaciones implementadas
+  \end{itemize}
+
+  \section*{Futuras Mejoras}
+
+  Para futuras mejoras, se podrían implementar los siguientes aspectos: 
+  \begin{itemize}
+    \item Movimiento de un personaje controlado por el jugador.
+    \item Objetos destructibles y detección de colisiones.
+    \item Patrones de disparo más complejos.
+  \end{itemize}
+
+  \section*{Referencias}
+
+  \begin{itemize}
+    \item \textbf{Assets}
+    \begin{itemize}
+      \item Dungeon Tale - Fantasy RPG Sprites FX Tileset. (2025). Unity Asset Store. \href{https://assetstore.unity.com/packages/2d/environments/dungeon-tale-fantasy-rpg-sprites-fx-tileset-296458}{Link}
+      \item Fake Shadow For 2D. (2025). Unity Asset Store. linkcolor \href{https://assetstore.unity.com/packages/2d/textures-materials/fake-shadow-for-2d-281626}{Link}
+      \item Free - Casual \& Relaxing Game Music Pack. (2025). Unity Asset Store. \href{https://assetstore.unity.com/packages/audio/music/free-casual-relaxing-game-music-pack-262740}{Link}
+    \end{itemize}
+    
+    \item \textbf{Videos}
+    \begin{itemize}
+      \item \href{https://www.youtube.com/watch?v=YNJM7rWbbxY}{Video 1}
+      \item \href{https://www.youtube.com/watch?v=_YgeNG6MtQQ&t=3s}{Video 2}
+      \item \href{https://www.youtube.com/watch?v=QQ3Yub9So2k&t=184s}{Video 3}
+    \end{itemize}
+
+    \item \textbf{Documentation}
+    \begin{itemize}
+      \item Unity Technologies. (2025). Unity - Scripting API: Time.deltaTime. \href{https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Time-deltaTime.html}{Link}
+      \item Unity Technologies. (2022). Cannot implicitly convert type “string” to “TMPro.TextMeshProUGUI.” \href{https://discussions.unity.com/t/cannot-implicitly-convert-type-string-to-tmpro-textmeshprougui/884511}{Link}
+      \item Destroy an instantiated prefab \href{https://stackoverflow.com/questions/68317810/how-can-i-destroy-a-prefab-i-instantiated-unity}{Link}
+      \item Instantiated a prefab \href{https://docs.unity3d.com/es/2019.4/Manual/InstantiatingPrefabs.html}{Link}
+    \end{itemize}
+    
+  \end{itemize}
+
+\end{document}
