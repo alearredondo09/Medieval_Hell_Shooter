@@ -16,6 +16,11 @@ The main focus is to simulate intense projectile patterns from enemy spawners.
 - Implemented this way to allow spawner rotation independently of the boss, so bullets can be emitted at multiple angles.
 
 ---
+## Video Demo 📷
+
+- **YouTube Link** [Link](https://youtu.be/X57H45DqY2A)
+
+--
 
 ## Features ⚙️
 

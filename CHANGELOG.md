@@ -1,3 +1,9 @@
+## [Report] (28/08/2025)
+
+### ADD
+- Latex document to create the report
+- Video to YouTube
+
 ## [main] (28/08/2025)
 
 ### ADD
